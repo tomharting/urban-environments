@@ -12,5 +12,6 @@ dist/
 *.egg-info
 
 .idea/
+data/
+deepsat-data/
 dataset-collection/data/
-
