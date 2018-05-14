@@ -26,7 +26,7 @@ def load_weights_into_model(model, weights_file, \
     layers_to_load = [l.name for k,l in enumerate(model.layers) \
                             if len(l.get_weights())>0 and l.name not in layers_to_skip and k not in layers_to_skip]
 
-    print "Loading %d layers from file into model..."%len(layers_to_load)
+    print("Loading %d layers from file into model..."%len(layers_to_load))
 
     l_file = 0
     for l_model in layers_to_load:
@@ -38,7 +38,7 @@ def load_weights_into_model(model, weights_file, \
             l_file += 1
             if len(weights)>0:
                 break
-        print model.get_layer(l_model).name, 
+        print(model.get_layer(l_model).name,) 
         # transpose convolutional layers saved with a different backend   
         layer = model.get_layer(l_model)    
         k = [k for k,l in enumerate(model.layers) if l.name==l_model][0]
@@ -47,13 +47,13 @@ def load_weights_into_model(model, weights_file, \
             if kernel.ndim > 2:
                 kernel = np.transpose(kernel, (2, 3, 1, 0))
             else:
-                print 'reshaping ...'
+                print('reshaping ...')
                 kernel = np.reshape(kernel, layer.get_weights()[0].shape)
-                print kernel.shape
+                print(kernel.shape)
             model.layers[k].set_weights([kernel, bias])
         else:
             model.layers[k].set_weights(weights)
-    print "done."
+    print("done.")
     f.close()
 
     return model
@@ -75,7 +75,7 @@ def load_and_preprocess(filename, new_shape=None, channels="RGB",
     if crop is not None:
         i = np.random.randint(crop/2, img.shape[0]-crop/2)
         j = np.random.randint(crop/2, img.shape[1]-crop/2)
-        img = img[(i-crop/2):(i+crop/2),(j-crop/2):(j+crop/2)]
+        img = img[(i-int(crop/2)):(i+int(crop/2)),(j-int(crop/2)):(j+int(crop/2))]
     if new_shape is not None:
         img = resize(img, new_shape, preserve_range=True)
     # imagenet_mean_bgr = np.array([103.939, 116.779, 123.68])
@@ -134,15 +134,15 @@ def generator_from_df(df, image_generator=None, balance=None, \
             df_batch = df_bal.sample(batch_size, random_state=seed)
         else:
             df_batch = df.iloc[idx:(idx+batch_size)]
-            print "Reading ids %d -- %d"%(idx, idx+batch_size)
+            print("Reading ids %d -- %d"%(idx, idx+batch_size))
             if idx + batch_size >= len(df):
-                print "should stop now!"
+                print("should stop now!")
                 ok = False
             idx += batch_size
         y = []
         X = []
         for i,r in df_batch.iterrows():
-            img = load_and_preprocess(r[filename_column], 
+            img = load_and_preprocess(r[filename_column],
                                       new_shape=new_img_shape, crop=crop,
                                       channels=channels, downsample=downsample)
             X.append(img)
