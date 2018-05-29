@@ -110,7 +110,7 @@ def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2))
 
 
 def ResNet50(include_top=True, weights='imagenet',
-             input_tensor=None, classes=1000):
+             input_tensor=None, classes=1000,input_shape=None):
     '''Instantiate the ResNet50 architecture,
     optionally loading weights pre-trained
     on ImageNet. Note that when using TensorFlow,
@@ -139,6 +139,7 @@ def ResNet50(include_top=True, weights='imagenet',
                          '`None` (random initialization) or `imagenet` '
                          '(pre-training on ImageNet).')
     # Determine proper input shape
+    '''
     if K.image_dim_ordering() == 'th':
         if include_top:
             input_shape = (3, 224, 224)
@@ -149,6 +150,7 @@ def ResNet50(include_top=True, weights='imagenet',
             input_shape = (224, 224, 3)
         else:
             input_shape = (None, None, 3)
+    '''
 
     if input_tensor is None:
         img_input = Input(shape=input_shape)
